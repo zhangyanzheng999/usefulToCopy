@@ -1,0 +1,18 @@
+table{
+    width:149.8mm;
+    table-layout:fixed;
+    word-break:break-all;
+    border-collapse:collapse;
+    cellspacing:0;
+}
+tr{
+    height: 8mm;
+}
+td{
+    text-align:center;
+    word-wrap:break-word;
+    font-family:Microsoft YaHei;
+    font-size:12pt;
+    border: 1px solid black;
+    cellspacing:0;
+}

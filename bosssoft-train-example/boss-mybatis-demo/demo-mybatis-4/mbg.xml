@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--targetRuntime:targetRuntime 生成简单版的crud
+                        MyBatis3:豪华版
+
+    -->
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <!--jdbcConnection:指定如何连接到目标数据库-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://112.124.21.230:3306/bosssoft?useSSL=false&amp;allowMultiQueries=true"
+                        userId="root"
+                        password="123456">
+        </jdbcConnection>
+        <!--javaTypeResolver java类型解析器:-->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!--javaModelGenerator:javaBean生成策略
+            targetPackage:生成目标包名
+            targetProject:生成在哪个工程下
+        -->
+        <javaModelGenerator targetPackage="com.bosssoft.hr.train.bean" targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!--sqlMapGenerator:sql映射生成策略-->
+        <sqlMapGenerator targetPackage="com.bosssoft.hr.train.dao" targetProject=".\src\main\resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+
+        <!--javaClientGenerator:指定mapper接口位置-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.bosssoft.hr.train.dao" targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+        <!--table指向要逆向生成哪些表:根据这些表要创建javaBean-->
+        <table tableName="tb_user" domainObjectName="User"></table>
+    </context>
+</generatorConfiguration>

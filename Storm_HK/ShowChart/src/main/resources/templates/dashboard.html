@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/asserts/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+
+<body>
+<!--引入topbar-->
+<div th:replace="~{commons/bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--引入sidebar-->
+        <div th:replace="~{commons/bar:: #sidebar(activeUir='main.html')}"></div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+
+            <div class="chartjs-size-monitor"
+                 style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                <div class="chartjs-size-monitor-expand"
+                     style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink"
+                     style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                </div>
+            </div>
+
+            <canvas class="my-4 chartjs-render-monitor" id="myChart" width="1076" height="454"
+                    style="display: block; width: 1076px; height: 454px;"></canvas>
+
+
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+<script type="text/javascript" src="asserts/js/popper.min.js" th:href="@{/asserts/js/popper.min.js}"></script>
+<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:href="@{/asserts/js/bootstrap.min.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" src="asserts/js/feather.min.js" th:href="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+
+<!-- echars -->
+<script type="text/javascript" src="asserts/js/echarts.min.js" th:href="@{/asserts/js/echarts.min.js}"></script>
+<!--webSocket-->
+<script type="text/javascript" th:src="@{/asserts/js/socket.js}"></script>
+
+<script>
+
+    var myChart
+    $(document).ready(function () {
+        //绑定eChart
+        myChart = echarts.init(document.getElementById('myChart'));
+        //加载数据
+        loadChart();
+        //动态刷新，30秒刷新一次
+        window.setInterval(function () {
+            loadChart();
+        }, 1000 * 30);
+
+    })
+
+    function loadChart() {
+        var fuzhu=Array(7);
+        var options = {
+            //定义一个标题
+            title: {
+                text: '近一小时，每十分钟报警数量(曲线图)'
+            },
+            legend: {
+                data: ['报警次数']
+            },
+            xAxis: {
+                name: "时间",
+                type: "category",
+                data: (function () {
+                    let now = new Date();
+                    let res = [];
+                    let len = 7;
+                    while (len--) {
+                        if(len!=6)
+                        now = new Date(now - 1000 * 60 * 10);
+                        fuzhu.unshift(now.getHours()+":"+now.getMinutes())
+
+                    }
+                    for(var i=0;i<6;i++){
+                        res.push(fuzhu[i]+"——"+fuzhu[i+1])
+                    }
+                    return res;
+                })(),
+            },
+            yAxis: {},
+            //name=legend.data的时候才能显示图例
+            series: [{
+                name: '报警次数',
+                type: 'line',
+                smooth: true,
+                symbol: 'emptycircle',    //设置折线图中表示每个坐标点的符号；emptycircle：空心圆；emptyrect：空心矩形；circle：实心圆；emptydiamond：菱形
+                data: []
+            }]
+        }
+        var count = Array(6).fill(0);//数量数组,填充0
+
+        myChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+        $.ajax({
+            url: "/storm/getinfos",
+            dataType: "json",
+            async: true,//请求是否异步，默认为异步，这也是ajax重要特性
+            type: "GET",
+            success: function (result) {
+
+                if (result != null) {
+                    for (var i = 1; i <=6; i++) {
+                        count[i-1] = result[i].length;
+                    }
+                    myChart.hideLoading();    //隐藏加载动画
+                    myChart.setOption({
+                        series: [{
+                            name: '报警次数',
+                            data: count
+                        }]
+                    })
+
+                } else {
+                    //返回的数据为空时显示提示信息
+                    alert("图表请求数据为空");
+                    myChart.hideLoading();
+                }
+
+            }
+        })
+
+        window.onresize = myChart.resize
+        myChart.clear()
+        myChart.setOption(options)
+    }
+</script>
+
+</body>
+
+</html>

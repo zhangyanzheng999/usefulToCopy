@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.neu.his.dao.RegisterMapper">
+  <resultMap id="BaseResultMap" type="cn.neu.his.bean.Register">
+    <id column="Register_ID" jdbcType="INTEGER" property="registerId" />
+    <result column="MedRecord_Code" jdbcType="INTEGER" property="medrecordCode" />
+    <result column="Patient_Name" jdbcType="VARCHAR" property="patientName" />
+    <result column="Patient_Sex" jdbcType="VARCHAR" property="patientSex" />
+    <result column="Patient_IDCard" jdbcType="VARCHAR" property="patientIdcard" />
+    <result column="Patient_Birth" jdbcType="DATE" property="patientBirth" />
+    <result column="Patient_Year" jdbcType="INTEGER" property="patientYear" />
+    <result column="Patient_Year_Type" jdbcType="VARCHAR" property="patientYearType" />
+    <result column="Patient_Address" jdbcType="VARCHAR" property="patientAddress" />
+    <result column="This_Visit_Date" jdbcType="DATE" property="thisVisitDate" />
+    <result column="Noon_Break" jdbcType="VARCHAR" property="noonBreak" />
+    <result column="Register_Dept_ID" jdbcType="INTEGER" property="registerDeptId" />
+    <result column="Register_Doctor_ID" jdbcType="INTEGER" property="registerDoctorId" />
+    <result column="Register_Type" jdbcType="INTEGER" property="registerType" />
+    <result column="Final_Type_ID" jdbcType="INTEGER" property="finalTypeId" />
+    <result column="MedRecord_Book" jdbcType="INTEGER" property="medrecordBook" />
+    <result column="Register_Time" jdbcType="TIMESTAMP" property="registerTime" />
+    <result column="Register_Person_ID" jdbcType="INTEGER" property="registerPersonId" />
+    <result column="This_Visit_State" jdbcType="INTEGER" property="thisVisitState" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    Register_ID, MedRecord_Code, Patient_Name, Patient_Sex, Patient_IDCard, Patient_Birth, 
+    Patient_Year, Patient_Year_Type, Patient_Address, This_Visit_Date, Noon_Break, Register_Dept_ID, 
+    Register_Doctor_ID, Register_Type, Final_Type_ID, MedRecord_Book, Register_Time, 
+    Register_Person_ID, This_Visit_State
+  </sql>
+  <select id="selectByExample" parameterType="cn.neu.his.bean.RegisterExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from register_list
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from register_list
+    where Register_ID = #{registerId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from register_list
+    where Register_ID = #{registerId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.neu.his.bean.RegisterExample">
+    delete from register_list
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.neu.his.bean.Register">
+    insert into register_list (Register_ID, MedRecord_Code, Patient_Name, 
+      Patient_Sex, Patient_IDCard, Patient_Birth, 
+      Patient_Year, Patient_Year_Type, Patient_Address, 
+      This_Visit_Date, Noon_Break, Register_Dept_ID, 
+      Register_Doctor_ID, Register_Type, Final_Type_ID, 
+      MedRecord_Book, Register_Time, Register_Person_ID, 
+      This_Visit_State)
+    values (#{registerId,jdbcType=INTEGER}, #{medrecordCode,jdbcType=INTEGER}, #{patientName,jdbcType=VARCHAR}, 
+      #{patientSex,jdbcType=VARCHAR}, #{patientIdcard,jdbcType=VARCHAR}, #{patientBirth,jdbcType=DATE}, 
+      #{patientYear,jdbcType=INTEGER}, #{patientYearType,jdbcType=VARCHAR}, #{patientAddress,jdbcType=VARCHAR}, 
+      #{thisVisitDate,jdbcType=DATE}, #{noonBreak,jdbcType=VARCHAR}, #{registerDeptId,jdbcType=INTEGER}, 
+      #{registerDoctorId,jdbcType=INTEGER}, #{registerType,jdbcType=INTEGER}, #{finalTypeId,jdbcType=INTEGER}, 
+      #{medrecordBook,jdbcType=INTEGER}, #{registerTime,jdbcType=TIMESTAMP}, #{registerPersonId,jdbcType=INTEGER}, 
+      #{thisVisitState,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.neu.his.bean.Register">
+    insert into register_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="registerId != null">
+        Register_ID,
+      </if>
+      <if test="medrecordCode != null">
+        MedRecord_Code,
+      </if>
+      <if test="patientName != null">
+        Patient_Name,
+      </if>
+      <if test="patientSex != null">
+        Patient_Sex,
+      </if>
+      <if test="patientIdcard != null">
+        Patient_IDCard,
+      </if>
+      <if test="patientBirth != null">
+        Patient_Birth,
+      </if>
+      <if test="patientYear != null">
+        Patient_Year,
+      </if>
+      <if test="patientYearType != null">
+        Patient_Year_Type,
+      </if>
+      <if test="patientAddress != null">
+        Patient_Address,
+      </if>
+      <if test="thisVisitDate != null">
+        This_Visit_Date,
+      </if>
+      <if test="noonBreak != null">
+        Noon_Break,
+      </if>
+      <if test="registerDeptId != null">
+        Register_Dept_ID,
+      </if>
+      <if test="registerDoctorId != null">
+        Register_Doctor_ID,
+      </if>
+      <if test="registerType != null">
+        Register_Type,
+      </if>
+      <if test="finalTypeId != null">
+        Final_Type_ID,
+      </if>
+      <if test="medrecordBook != null">
+        MedRecord_Book,
+      </if>
+      <if test="registerTime != null">
+        Register_Time,
+      </if>
+      <if test="registerPersonId != null">
+        Register_Person_ID,
+      </if>
+      <if test="thisVisitState != null">
+        This_Visit_State,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="registerId != null">
+        #{registerId,jdbcType=INTEGER},
+      </if>
+      <if test="medrecordCode != null">
+        #{medrecordCode,jdbcType=INTEGER},
+      </if>
+      <if test="patientName != null">
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="patientSex != null">
+        #{patientSex,jdbcType=VARCHAR},
+      </if>
+      <if test="patientIdcard != null">
+        #{patientIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="patientBirth != null">
+        #{patientBirth,jdbcType=DATE},
+      </if>
+      <if test="patientYear != null">
+        #{patientYear,jdbcType=INTEGER},
+      </if>
+      <if test="patientYearType != null">
+        #{patientYearType,jdbcType=VARCHAR},
+      </if>
+      <if test="patientAddress != null">
+        #{patientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="thisVisitDate != null">
+        #{thisVisitDate,jdbcType=DATE},
+      </if>
+      <if test="noonBreak != null">
+        #{noonBreak,jdbcType=VARCHAR},
+      </if>
+      <if test="registerDeptId != null">
+        #{registerDeptId,jdbcType=INTEGER},
+      </if>
+      <if test="registerDoctorId != null">
+        #{registerDoctorId,jdbcType=INTEGER},
+      </if>
+      <if test="registerType != null">
+        #{registerType,jdbcType=INTEGER},
+      </if>
+      <if test="finalTypeId != null">
+        #{finalTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="medrecordBook != null">
+        #{medrecordBook,jdbcType=INTEGER},
+      </if>
+      <if test="registerTime != null">
+        #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerPersonId != null">
+        #{registerPersonId,jdbcType=INTEGER},
+      </if>
+      <if test="thisVisitState != null">
+        #{thisVisitState,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.neu.his.bean.RegisterExample" resultType="java.lang.Long">
+    select count(*) from register_list
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update register_list
+    <set>
+      <if test="record.registerId != null">
+        Register_ID = #{record.registerId,jdbcType=INTEGER},
+      </if>
+      <if test="record.medrecordCode != null">
+        MedRecord_Code = #{record.medrecordCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.patientName != null">
+        Patient_Name = #{record.patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientSex != null">
+        Patient_Sex = #{record.patientSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientIdcard != null">
+        Patient_IDCard = #{record.patientIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientBirth != null">
+        Patient_Birth = #{record.patientBirth,jdbcType=DATE},
+      </if>
+      <if test="record.patientYear != null">
+        Patient_Year = #{record.patientYear,jdbcType=INTEGER},
+      </if>
+      <if test="record.patientYearType != null">
+        Patient_Year_Type = #{record.patientYearType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.patientAddress != null">
+        Patient_Address = #{record.patientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thisVisitDate != null">
+        This_Visit_Date = #{record.thisVisitDate,jdbcType=DATE},
+      </if>
+      <if test="record.noonBreak != null">
+        Noon_Break = #{record.noonBreak,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registerDeptId != null">
+        Register_Dept_ID = #{record.registerDeptId,jdbcType=INTEGER},
+      </if>
+      <if test="record.registerDoctorId != null">
+        Register_Doctor_ID = #{record.registerDoctorId,jdbcType=INTEGER},
+      </if>
+      <if test="record.registerType != null">
+        Register_Type = #{record.registerType,jdbcType=INTEGER},
+      </if>
+      <if test="record.finalTypeId != null">
+        Final_Type_ID = #{record.finalTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.medrecordBook != null">
+        MedRecord_Book = #{record.medrecordBook,jdbcType=INTEGER},
+      </if>
+      <if test="record.registerTime != null">
+        Register_Time = #{record.registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.registerPersonId != null">
+        Register_Person_ID = #{record.registerPersonId,jdbcType=INTEGER},
+      </if>
+      <if test="record.thisVisitState != null">
+        This_Visit_State = #{record.thisVisitState,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update register_list
+    set Register_ID = #{record.registerId,jdbcType=INTEGER},
+      MedRecord_Code = #{record.medrecordCode,jdbcType=INTEGER},
+      Patient_Name = #{record.patientName,jdbcType=VARCHAR},
+      Patient_Sex = #{record.patientSex,jdbcType=VARCHAR},
+      Patient_IDCard = #{record.patientIdcard,jdbcType=VARCHAR},
+      Patient_Birth = #{record.patientBirth,jdbcType=DATE},
+      Patient_Year = #{record.patientYear,jdbcType=INTEGER},
+      Patient_Year_Type = #{record.patientYearType,jdbcType=VARCHAR},
+      Patient_Address = #{record.patientAddress,jdbcType=VARCHAR},
+      This_Visit_Date = #{record.thisVisitDate,jdbcType=DATE},
+      Noon_Break = #{record.noonBreak,jdbcType=VARCHAR},
+      Register_Dept_ID = #{record.registerDeptId,jdbcType=INTEGER},
+      Register_Doctor_ID = #{record.registerDoctorId,jdbcType=INTEGER},
+      Register_Type = #{record.registerType,jdbcType=INTEGER},
+      Final_Type_ID = #{record.finalTypeId,jdbcType=INTEGER},
+      MedRecord_Book = #{record.medrecordBook,jdbcType=INTEGER},
+      Register_Time = #{record.registerTime,jdbcType=TIMESTAMP},
+      Register_Person_ID = #{record.registerPersonId,jdbcType=INTEGER},
+      This_Visit_State = #{record.thisVisitState,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.neu.his.bean.Register">
+    update register_list
+    <set>
+      <if test="medrecordCode != null">
+        MedRecord_Code = #{medrecordCode,jdbcType=INTEGER},
+      </if>
+      <if test="patientName != null">
+        Patient_Name = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="patientSex != null">
+        Patient_Sex = #{patientSex,jdbcType=VARCHAR},
+      </if>
+      <if test="patientIdcard != null">
+        Patient_IDCard = #{patientIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="patientBirth != null">
+        Patient_Birth = #{patientBirth,jdbcType=DATE},
+      </if>
+      <if test="patientYear != null">
+        Patient_Year = #{patientYear,jdbcType=INTEGER},
+      </if>
+      <if test="patientYearType != null">
+        Patient_Year_Type = #{patientYearType,jdbcType=VARCHAR},
+      </if>
+      <if test="patientAddress != null">
+        Patient_Address = #{patientAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="thisVisitDate != null">
+        This_Visit_Date = #{thisVisitDate,jdbcType=DATE},
+      </if>
+      <if test="noonBreak != null">
+        Noon_Break = #{noonBreak,jdbcType=VARCHAR},
+      </if>
+      <if test="registerDeptId != null">
+        Register_Dept_ID = #{registerDeptId,jdbcType=INTEGER},
+      </if>
+      <if test="registerDoctorId != null">
+        Register_Doctor_ID = #{registerDoctorId,jdbcType=INTEGER},
+      </if>
+      <if test="registerType != null">
+        Register_Type = #{registerType,jdbcType=INTEGER},
+      </if>
+      <if test="finalTypeId != null">
+        Final_Type_ID = #{finalTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="medrecordBook != null">
+        MedRecord_Book = #{medrecordBook,jdbcType=INTEGER},
+      </if>
+      <if test="registerTime != null">
+        Register_Time = #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerPersonId != null">
+        Register_Person_ID = #{registerPersonId,jdbcType=INTEGER},
+      </if>
+      <if test="thisVisitState != null">
+        This_Visit_State = #{thisVisitState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Register_ID = #{registerId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.neu.his.bean.Register">
+    update register_list
+    set MedRecord_Code = #{medrecordCode,jdbcType=INTEGER},
+      Patient_Name = #{patientName,jdbcType=VARCHAR},
+      Patient_Sex = #{patientSex,jdbcType=VARCHAR},
+      Patient_IDCard = #{patientIdcard,jdbcType=VARCHAR},
+      Patient_Birth = #{patientBirth,jdbcType=DATE},
+      Patient_Year = #{patientYear,jdbcType=INTEGER},
+      Patient_Year_Type = #{patientYearType,jdbcType=VARCHAR},
+      Patient_Address = #{patientAddress,jdbcType=VARCHAR},
+      This_Visit_Date = #{thisVisitDate,jdbcType=DATE},
+      Noon_Break = #{noonBreak,jdbcType=VARCHAR},
+      Register_Dept_ID = #{registerDeptId,jdbcType=INTEGER},
+      Register_Doctor_ID = #{registerDoctorId,jdbcType=INTEGER},
+      Register_Type = #{registerType,jdbcType=INTEGER},
+      Final_Type_ID = #{finalTypeId,jdbcType=INTEGER},
+      MedRecord_Book = #{medrecordBook,jdbcType=INTEGER},
+      Register_Time = #{registerTime,jdbcType=TIMESTAMP},
+      Register_Person_ID = #{registerPersonId,jdbcType=INTEGER},
+      This_Visit_State = #{thisVisitState,jdbcType=INTEGER}
+    where Register_ID = #{registerId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <bean id="userDao" class="com.boss.learning.springdemo.dao.UserDao"/>
+    <bean id="userService" class="com.boss.learning.springdemo.service.UserService" init-method="init"
+          destroy-method="destroy">
+        <constructor-arg ref="userDao"></constructor-arg>
+
+    </bean>
+
+    <bean id="sysService" class="com.boss.learning.springdemo.service.impl.ISysServiceImpl" scope="prototype">
+
+        <property name="userDao" ref="userDao"></property>
+    </bean>
+
+    <bean id="student" class="com.boss.learning.springdemo.bean.Student">
+        <property name="age" value="18"/>
+        <property name="name" value="张三"/>
+        <property name="address">
+            <list>
+                <value>福州</value>
+                <value>厦门</value>
+            </list>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bosssoft.hr.train.spring.dao.UserMapper">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into spring_user(name)
+        values (#{name})
+    </insert>
+
+    <update id="update">
+        update spring_user
+        set name = #{name}
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from spring_user
+        where id = #{id}
+    </delete>
+    <!--批量删除-->
+    <delete id="deleteByArray">
+        delete from spring_user
+        <where>
+            id in
+            <foreach collection="ids" item="id" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+
+        </where>
+
+    </delete>
+
+    <select id="queryUsers" resultType="com.bosssoft.hr.train.spring.bean.User">
+        select * from spring_user
+        <where>
+            name like #{name}
+        </where>
+
+    </select>
+</mapper>

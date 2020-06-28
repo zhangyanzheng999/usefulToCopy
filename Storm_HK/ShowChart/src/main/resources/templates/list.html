@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+
+      xmlns:th="http://www.thymeleaf.org"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+
+      layout:decorator="page">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/asserts/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet">
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+
+<body>
+<!--引入抽取的topbar-->
+<!--模板名：会使用thymeleaf的解析规则-->
+<div th:replace="~{commons/bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--引入侧边栏-->
+        <div th:replace="~{commons/bar:: #sidebar(activeUir='infos')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>风机编号</th>
+                        <th>报警时间</th>
+                        <th>描述</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="info:${infos}">
+                        <td th:text="${info.id}"></td>
+                        <td th:text="${info.fanNo}"></td>
+                        <td th:text="${#dates.format(info.time,'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="'过去30秒发动机温度高于80℃出现'+${info.count}+'次'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+                <div>
+
+                    <div class="container">
+                        <ul style="margin:0px;margin-left: 250px" class="pagination">
+                            <li class="page-item"><a class="page-link" href="#" th:href="@{/infos(page=0)}">首页</a></li>
+                            <li class="page-item" th:if="${infos.hasPrevious()}"><a class="page-link" href="#" th:href="@{/infos(page=${infos.number}-1)}">上一页</a>
+                            </li>
+                            <!--总页数小于等于10-->
+                            <div th:if="${(infos.totalPages le 10) and (infos.totalPages gt 0)}" th:remove="tag">
+                                <div th:each="pg : ${#numbers.sequence(0, infos.totalPages - 1)}" th:remove="tag">
+                        <span th:if="${pg eq infos.getNumber()}" th:remove="tag">
+                            <li class="page-item active">
+                         <span class="page-link" th:text="${pg+1}">${pageNumber}</span></li>
+                        </span>
+                        <span th:unless="${pg eq infos.getNumber()}" th:remove="tag">
+                            <li class="page-item"><a class="page-link" href="#" th:href="@{/infos(page=${pg})}" th:text="${pg+1}"></a></li>
+                        </span>
+                                </div>
+                            </div>
+                            <!-- 总数数大于10时 -->
+                            <div th:if="${infos.totalPages gt 10}" th:remove="tag">
+                                <li class="page-item" th:if="${infos.number+(-2) ge 0}"><a class="page-link" href="#"
+                                                                         th:href="@{/infos(page=${infos.number}-2)}"
+                                                                         th:text="${infos.number}-1"></a></li>
+                                <li class="page-item" th:if="${infos.number+(-1) ge 0}"><a class="page-link" href="#"
+                                                                         th:href="@{/infos(page=${infos.number}-1)}"
+                                                                         th:text="${infos.number}"></a></li>
+                                <li class="page-item active"><span class="page-link current_page line_height"
+                                                         th:text="${infos.number+1}"></span></li>
+                                <li class="page-item" th:if="${infos.number+1 lt infos.totalPages}"><a class="page-link" href="#"
+                                                                                     th:href="@{/infos(page=${infos.number}+1)}"
+                                                                                     th:text="${infos.number+2}"></a>
+                                </li>
+
+                                <li class="page-item" th:if="${infos.number+2 lt infos.totalPages}"><a class="page-link" href="#"
+                                                                                     th:href="@{/infos(page=${infos.number}+2)}"
+                                                                                     th:text="${infos.number+3}"></a>
+                                </li>
+
+                            </div>
+
+
+                            <li class="page-item" th:if="${infos.hasNext()}"><a class="page-link" href="#" th:href="@{/infos(page=${infos.number+1})}">下一页</a></li>
+
+                            <div th:if="${infos.totalPages>0}">
+                                <li class="page-item"><a class="page-link" href="#" th:href="@{/infos(page=${infos.totalPages}-1)}">尾页</a></li>
+                            </div>
+
+
+                                <li class="page-item"><span class="page-link" th:text="'共'+${infos.totalPages}+'页 / '+${infos.totalElements}+' 条'"></span>
+                                </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </main>
+
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/asserts/js/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/asserts/js/bootstrap.min.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+<script type="text/javascript" th:src="@{/asserts/js/socket.js}"></script>
+<script>
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+server:
+  port: 12345
+spring:
+  application:
+    name: ddo-server
+#  datasource:
+#    url: jdbc:mysql://112.124.21.230:3306/bosssoft?useSSL=false&characterEncoding=utf8
+#    username: root
+#    password: 123456
+#    driver-class-name: com.mysql.jdbc.Driver
+#    #
+#    hikari:
+#      minimum-idle: 3
+#      maximum-pool-size: 10
+#      max-lifetime: 300000
+#      connection-test-query: SELECT 1
+#  redis:
+#    database: 0
+#    host: 112.124.21.230
+#    password: zyz0302..
+#    port: 23456
+#    #jedis
+#    lettuce:
+#      pool:
+#        max-active: 30
+#        max-wait: 10000
+#        max-idle: 30
+#        min-idle: 10
+    #timeout: 300
+  cloud:
+    config:
+      profile: dev
+      label: master
+      discovery:
+        enabled: true
+        service-id: config-server
+      fail-fast: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+#mybatis:
+#  mapper-locations: classpath:/mybatis/mapper/*.xml
+#  configuration:
+#    map-underscore-to-camel-case: true
+## PageHelper分页插件配置
+#pagehelper:
+#  helper-dialect: mysql
+#  reasonable: true
+#  support-methods-arguments: true
+#  params: count=countSql
+#SpringCloud
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8762/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh

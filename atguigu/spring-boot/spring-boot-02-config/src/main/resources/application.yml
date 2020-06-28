@@ -1,0 +1,19 @@
+server:
+  port: 8081
+spring:
+  profiles:
+    active: dev
+---
+server:
+  port: 8083
+spring:
+  profiles: dev
+#命令行参数 java -jar   **.jar    --spring.profiles.active=dev
+#虚拟机参数 -Dspring.profiles.active=dev
+
+---
+server:
+  port: 8084
+spring:
+  profiles: prod
+---

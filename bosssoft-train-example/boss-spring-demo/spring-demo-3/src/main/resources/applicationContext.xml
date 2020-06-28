@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <context:component-scan base-package="com.bosssoft.hr.train.spring">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!--引入配置文件-->
+    <context:property-placeholder location="classpath:dbconfig.properties,classpath:redis.properties"/>
+    <cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>
+    <!-- redis连接池 -->
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWait}"/>
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+    </bean>
+    <!--连接工厂-->
+    <bean id="JedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis.host}"/>
+        <property name="port" value="${redis.port}"/>
+        <property name="password" value="${redis.pass}"/>
+        <property name="poolConfig" ref="poolConfig"/>
+    </bean>
+    <!--redis 模板-->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="JedisConnectionFactory"/>
+    </bean>
+
+    <!---->
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="com.bosssoft.hr.train.spring.cache.RedisCache">
+                    <property name="redisTemplate" ref="redisTemplate"/>
+                    <property name="name" value="context"/>
+                </bean>
+            </set>
+        </property>
+
+    </bean>
+
+    <!--配置数据源-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!--Spring事务管理-->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--开启基于注解的事务-->
+    <tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+
+    <!--整合mybatis
+        整合:1、Spring管理所有组件。mapper的实现类
+                service==>Dao @Autowired:自动注入
+            2、spring用来管理事务
+    -->
+    <!--创建sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--configLocation指定全局配置文件的位置-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!--指定mapper文件的位置
+            mapperLocations
+        -->
+        <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"></property>
+    </bean>
+
+
+    <!--配置一个可以进行批量执行的sqlSession-->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+        <!--设置BATCH会造成返回值丢失-->
+        <constructor-arg name="executorType" value="SIMPLE"></constructor-arg>
+    </bean>
+
+    <!--扫描所有mapper接口实现,让这些mapper能够自动注入
+        base-package:指定mapper接口的包名
+    -->
+    <!--两种方法二选一-->
+    <mybatis-spring:scan base-package="com.bosssoft.hr.train.spring.dao"/>
+
+
+</beans>

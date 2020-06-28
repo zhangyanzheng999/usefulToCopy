@@ -1,0 +1,21 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    username: root
+    password: Root151.
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/boss_bes_exam?serverTimezone=GMT%2B8
+  application:
+    name: train-springboot-basic-example
+  mapper:
+    mappers:
+    - tk.mybatis.mapper.common.Mapper
+    - tk.mybatis.mapper.common.Mapper2
+    notEmpty: true
+  mybatis:
+      mapper-locations: classpath*:mybatis/mapper/*.xml
+      configuration:
+        map-underscore-to-camel-case: true
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+      type-aliases-package: com.bosssoft.hr.train.springboot.basic.example.pojo.query

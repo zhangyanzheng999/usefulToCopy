@@ -1,0 +1,13 @@
+server:
+  port: 9003
+spring:
+  application:
+    name: consumer-feign
+  profiles:
+    active: native
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+

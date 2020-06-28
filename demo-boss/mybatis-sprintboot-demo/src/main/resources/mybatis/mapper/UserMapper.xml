@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boss.hr.train.mybatis.dao.UserMapper">
+    <cache/>
+
+    <!--添加-->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into user_info(user_name, user_password, user_birth, user_address, user_phone, user_status)
+        values (#{userName}, #{userPassword}, #{userBirth}, #{userAddress}, #{userPhone}, #{userStatus})
+    </insert>
+
+
+    <!--更新-->
+    <update id="updateUser">
+        update user_info
+        <set>
+            <if test="userName!=null">
+                user_name=#{userName},
+            </if>
+            <if test="userPassword != null">
+                user_password=#{userPassword},
+            </if>
+            <if test="userBirth != null ">
+                user_birth=#{userBirth},
+            </if>
+            <if test="userAddress != null">
+                user_address=#{userAddress},
+            </if>
+            <if test="userPhone != null">
+                user_phone=#{userPhone},
+            </if>
+            <if test="userStatus != null">
+                user_status=#{userStatus}
+            </if>
+        </set>
+        <where>
+            user_id=#{userId}
+        </where>
+    </update>
+
+
+    <select id="selectUserByCondition" resultType="com.boss.hr.train.mybatis.bean.User">
+
+        select * from user_info
+        <where>
+            user_name like #{userName}
+
+        </where>
+
+
+    </select>
+
+</mapper>   

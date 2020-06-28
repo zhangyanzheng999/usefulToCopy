@@ -1,0 +1,27 @@
+spring:
+  #连接数据库
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://172.16.29.70:3306/zyztenmindata_original
+    #自动创建表以及显示sql语句
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+#国际化
+  messages:
+    basename: i18n.login
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+    date-format: yyyy-MM-dd HH:mm:ss
+  #关闭thymeleaf缓存
+  thymeleaf:
+    cache: false
+    #设置项目路径
+server:
+  servlet:
+    context-path: /storm

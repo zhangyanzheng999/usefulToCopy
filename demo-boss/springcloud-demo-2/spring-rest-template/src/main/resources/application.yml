@@ -1,0 +1,16 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: ribbon-eureka-demo
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:123456@localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+ribbon:
+  eager-load:
+    enabled: true
+    clients: ribbon-eureka-demo

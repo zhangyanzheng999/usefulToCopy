@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!-- 配置数据库链接信息 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/med?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=true"
+			userId="root" password="root">
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		<!-- 指定javaBean生成位置 -->
+		<javaModelGenerator targetPackage="cn.neu.his.bean"
+			targetProject=".\src\main\java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!-- 指定sql映射文件 生成位置 -->
+		<sqlMapGenerator targetPackage="mapper"
+			targetProject=".\src\main\resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!--指定dao接口生成位置 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="cn.neu.his.dao" targetProject=".\src\main\java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		<!-- 指定每个表的生成策略 -->
+		<!-- <table tableName="diag" domainObjectName="Diag" ></table> -->
+		<!-- <table tableName="bill" domainObjectName="Bill" ></table> -->
+		<!-- <table tableName="disease" domainObjectName="Disease" ></table> -->
+		<!-- <table tableName="ready_mould" domainObjectName="Mould" ></table> -->
+		<!-- <table tableName="ready_mould_detail" domainObjectName="DetailMould" 
+			></table> -->
+		<!-- <table tableName="user" domainObjectName="User" ></table> -->
+		<!-- <table tableName="department" domainObjectName="Dept" ></table> -->
+		<!-- <table tableName="medrecord" domainObjectName="Medrecord" ></table> -->
+		<!-- <table tableName="drugs" domainObjectName="Drug" ></table> -->
+		<!-- <table tableName="register_list" domainObjectName="Register" ></table> -->
+		<!-- <table tableName="register_type" domainObjectName="RegType" ></table> -->
+		<!-- <table tableName="charge" domainObjectName="Charge" ></table> -->
+		<!--<table tableName="prescription" domainObjectName="Prescription"></table>-->
+		<!-- <table tableName="detailpre" domainObjectName="Detailpre" ></table> -->
+		<!--<table tableName="templateyiji" domainObjectName="TemplateYiji"></table>-->
+		<!--<table tableName="detailtemplateyiji" domainObjectName="DetailTemplateYiji"></table>-->
+		<table tableName="fmeditem" domainObjectName="fmedItem"></table>
+	</context>
+</generatorConfiguration>

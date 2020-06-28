@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bosssoft.hr.train.dao.DataMapper">
+
+
+    <resultMap id="ddWithType" type="com.bosssoft.hr.train.bean.DataDictionary">
+        <id property="ddId" column="dd_id"/>
+        <result property="argsValue" column="args_value"/>
+        <result property="ddNote" column="dd_note"/>
+        <result property="orgId" column="org_id"/>
+        <result property="status" column="status"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedTime" column="updated_time"/>
+        <result property="version" column="version"/>
+        <result property="ddTypeId" column="dd_type_id"/>
+
+
+        <association property="ddType" select="com.bosssoft.hr.train.dao.DdTypeMapper.selectById" column="dd_type_id"/>
+    </resultMap>
+
+
+    <select id="findById" resultMap="ddWithType">
+        SELECT `dd_id`,
+        <include refid="insertColumn"/>
+        FROM dd
+        WHERE dd_id = #{id}
+    </select>
+
+    <select id="queryDds" resultMap="ddWithType">
+        SELECT `dd_id`,
+        <include refid="insertColumn"/>
+        FROM dd
+        ORDER BY dd_type_id ASC
+    </select>
+
+    <insert id="insertDD" useGeneratedKeys="true" keyProperty="ddId">
+        INSERT INTO dd(<include refid="insertColumn"/>)
+        VALUES
+        (#{argsValue},#{ddNote},#{status},#{orgId},#{createdBy},#{createdTime},#{updatedBy},#{updatedTime},#{version},#{ddTypeId})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE
+        FROM dd
+        WHERE dd_id = #{id}
+    </delete>
+
+    <update id="updateDD">
+        UPDATE dd
+        SET args_value=#{argsValue},
+            dd_note=#{ddNote},
+            status=#{status},
+            org_id=#{orgId},
+            created_by=#{createdBy},
+            created_time=#{createdTime},
+            updated_by=#{updatedBy},
+            updated_time=#{updatedTime},
+            version=#{version},
+            dd_type_id=#{ddTypeId}
+        WHERE dd_id = #{ddId}
+    </update>
+
+    <!--抽取公共列-->
+    <sql id="insertColumn">
+        args_value, dd_note, status, org_id, created_by, created_time, updated_by, updated_time, version, dd_type_id
+    </sql>
+</mapper>   

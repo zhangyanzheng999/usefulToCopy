@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--targetRuntime:targetRuntime 生成简单版的crud
+                        MyBatis3:豪华版
+
+    -->
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <property name="useMapperCommentGenerator" value="false"/>
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+            <property name="caseSensitive" value="true"/>
+            <property name="forceAnnotation" value="true"/>
+            <property name="beginningDelimiter" value="`"/>
+            <property name="endingDelimiter" value="`"/>
+        </plugin>
+        <!--jdbcConnection:指定如何连接到目标数据库-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/bosssoft?useSSL=false&amp;allowMultiQueries=true"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+        <!--javaTypeResolver java类型解析器:-->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!--javaModelGenerator:javaBean生成策略
+            targetPackage:生成目标包名
+            targetProject:生成在哪个工程下
+        -->
+        <javaModelGenerator targetPackage="com.bosssoft.hr.train.pojo.entity" targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mybatis"
+                         targetProject="src/main/resources"/>
+
+        <javaClientGenerator targetPackage="com.bosssoft.hr.train.pojo.dao.mapper"
+                             targetProject="src/main/java"
+                             type="XMLMAPPER"/>
+
+        <table tableName="user" domainObjectName="MBGUser">
+            <generatedKey column="id" sqlStatement="JDBC"/>
+        </table>
+    </context>
+</generatorConfiguration>

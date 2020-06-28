@@ -1,0 +1,19 @@
+spring:
+  redis:
+    database: 0
+    host: 112.124.21.230
+    port: 23456
+    password: zyz0302..
+    #jedis
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 300
+  datasource:
+    url: jdbc:mysql://112.124.21.230:3306/bosssoft?useSSL=false&characterEncoding=utf8
+    username: root
+    password: 123456
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bosssoft.hr.train.dao.UserMapper">
+    <select id="getUser" resultType="com.bosssoft.hr.train.bean.User">
+        SELECT id userId, user_name, user_password
+        FROM dd_user
+        WHERE user_name = #{userName}
+          and user_password = #{userPassword}
+    </select>
+
+</mapper>   

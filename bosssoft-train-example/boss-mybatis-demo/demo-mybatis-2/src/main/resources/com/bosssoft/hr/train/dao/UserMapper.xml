@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bosssoft.hr.train.dao.UserMapper">
+
+    <resultMap id="userWithCompany" type="com.bosssoft.hr.train.bean.User">
+        <id column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <association property="company" resultMap="company"/>
+    </resultMap>
+
+    <resultMap id="company" type="com.bosssoft.hr.train.bean.Company">
+        <id column="company_id" property="companyId"/>
+        <result column="company_name" property="companyName"/>
+    </resultMap>
+    <resultMap id="role" type="com.bosssoft.hr.train.bean.Role">
+        <id column="role_id" property="roleId"/>
+        <result column="role_name" property="roleName"/>
+    </resultMap>
+
+    <select id="getUserByIdWithCompany" resultMap="userWithCompany">
+        select u.user_id      user_id,
+               u.user_name    user_name,
+               c.company_id   company_id,
+               c.company_name company_name
+        from mybatis_user u
+                 LEFT JOIN mybatis_company c
+                           on u.company_id = c.company_id
+        where u.user_id = #{id}
+    </select>
+
+    <resultMap id="userWithRole" type="com.bosssoft.hr.train.bean.User">
+        <id column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <collection property="roles" ofType="com.bosssoft.hr.train.bean.Role" resultMap="role"/>
+    </resultMap>
+
+
+    <select id="getUserByIdWithRole" resultMap="userWithRole">
+        select user.user_id   user_id,
+               user.user_name user_name,
+               role.role_id   role_id,
+               role.role_name role_name
+        from mybatis_user user
+                 LEFT JOIN mybatis_user_role user_role on user.user_id = user_role.user_id
+                 LEFT JOIN mybaits_role role on user_role.role_id = role.role_id
+        where user.user_id = #{id}
+
+    </select>
+
+</mapper>

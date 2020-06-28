@@ -1,0 +1,24 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        #        native:
+        #          search-locations: classpath:config/
+        git:
+          uri: https://github.com/zhangyanzheng999/springcloudlearn.git
+          search-paths: config-hztech
+          username: zhangyanzheng999
+          password: zyz0302..
+          default-label: master
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8762/eureka/
+  profiles:
+    active: prod
+#  profiles:
+#    active: native

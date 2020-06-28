@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Test for WebSocket</title>
+</head>
+<body>
+<p style="margin:0 auto;text-align: center">【发送的消息】：</p>
+<div style="margin:0 auto;text-align: center"><input id="sendText" type="text"></div>
+
+<div style="margin:0 auto;text-align: center">
+    <button type="button" id="send">发送消息</button>
+</div>
+<p style="margin:0 auto;text-align: center">【接受的消息】：</p>
+<div style="margin:0 auto;text-align: center"><input id="receiveText" type="text" readonly></div>
+</body>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript"
+        th:src="@{/webjars/jquery/3.3.1/jquery.js}"></script>
+<!--webSocket-->
+<script type="text/javascript" th:src="@{/asserts/js/socket.js}"></script>
+
+<script>
+    //发送消息
+    $("#send").click(function () {
+        let message=$("#sendText").val()
+        if(message!=""){
+            sendMessage(message)
+        }else{
+            alert("请输入消息！")
+        }
+
+    })
+
+</script>
+
+</body>
+
+</html>

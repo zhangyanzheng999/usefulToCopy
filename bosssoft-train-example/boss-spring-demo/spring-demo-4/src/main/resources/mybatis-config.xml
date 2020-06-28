@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!--驼峰命名法-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+    </settings>
+
+
+    <!--5、支持多数据库厂商的
+       type="DB_VENDOR":别名(VendorDatabaseIdProvider)
+           作用就是得到数据库厂商的标识(驱动)，mybatis就能根据数据库厂商表示来执行不同的sql
+
+       在sql映射文件中会加载带了正确标识的和不带标识的，但是带了正确标识的优先
+   -->
+    <databaseIdProvider type="DB_VENDOR">
+        <!--为不同数据库厂商起别名-->
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle"/>
+        <property name="SQL Server" value="sqlserver"/>
+    </databaseIdProvider>
+</configuration>

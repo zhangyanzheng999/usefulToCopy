@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <properties resource="dbconfig.properties"></properties>
+
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+        <setting name="jdbcTypeForNull" value="NULL"/>
+
+    </settings>
+
+    <!--数据源-->
+    <environments default="dev_mysql">
+        <environment id="dev_mysql">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+
+    <databaseIdProvider type="DB_VENDOR">
+        <!--为不同数据库厂商起别名-->
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle"/>
+        <property name="SQL Server" value="sqlserver"/>
+    </databaseIdProvider>
+
+    <!--mapper:注册一个sql映射
+               注册配置文件
+               resource:引用类路径下的sql映射文件
+               url:引用网络路径或者磁盘路径下的资源
+               注册接口
+               class:引用(注册)接口
+                   1、有sql映射文件，映射文件名必须和接口同名并且放在与接口同一目录下
+                   2、没有sql映射文件，所有sql都是利用注解写在接口上
+
+               推荐：比较重要的、复杂的Dao接口写sql映射文件
+                      不重要的，简单地Dao接口为了开发快速可以使用注解
+       -->
+    <mappers>
+        <package name="com.boss.mybatis.db.mapper"/>
+    </mappers>
+
+</configuration>
