@@ -2,12 +2,22 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bosssoft.hr.train.dao.mapper.UserDao">
+<mapper namespace="com.bosssoft.hr.train.dao.mapper.UserMapper">
 
 
     <select id="findUsersLikeName" resultType="com.bosssoft.hr.train.pojo.entity.User">
         SELECT *
         FROM t_user
         WHERE name LIKE #{name}
+    </select>
+
+
+    <select id="findUsersWithNo" resultType="com.bosssoft.hr.train.pojo.entity.User" statementType="CALLABLE">
+        SELECT a.name name,a.age age,@no:=@no+1 as id
+        FROM (
+                SELECT *
+                FROM  t_user
+                ORDER BY t_user.id asc
+        ) a,(SELECT @no:=#{start}) b
     </select>
 </mapper>

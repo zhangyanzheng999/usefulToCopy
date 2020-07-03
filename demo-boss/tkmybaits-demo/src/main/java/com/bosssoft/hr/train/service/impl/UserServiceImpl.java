@@ -67,4 +67,13 @@ public class UserServiceImpl implements UserService {
 
         return PageInfo.of(users, 5);
     }
+
+
+    public PageInfo<User> findWithPageAndNo(Integer pageNum, Integer pageSize) {
+
+        PageMethod.startPage(pageNum, pageSize);
+        List<User> users = userMapper.findUsersWithNo((pageNum - 1) * pageSize);
+        System.err.println(users);
+        return PageInfo.of(users, 5);
+    }
 }

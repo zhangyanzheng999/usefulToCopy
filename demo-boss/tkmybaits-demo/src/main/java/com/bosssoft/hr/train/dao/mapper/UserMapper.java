@@ -14,4 +14,6 @@ import java.util.List;
 
 public interface UserMapper extends Mapper<User>, MySqlMapper<User> {
     List<User> findUsersLikeName(String name);
+
+    List<User> findUsersWithNo(int start);
 }

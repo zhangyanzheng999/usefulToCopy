@@ -46,4 +46,8 @@ class TkmybaitsDemoApplicationTests {
     void findWithPage() {
         System.out.println(userService.findWithPage(1, 3));
     }
+    @Test
+    void findWithPageNo() {
+        System.out.println(userService.findWithPageAndNo(3, 3));
+    }
 }

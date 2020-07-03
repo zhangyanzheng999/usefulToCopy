@@ -20,4 +20,5 @@ public interface UserService {
     List<User> findWithExample(String name);
 
     PageInfo<User> findWithPage(Integer pageNum,Integer pageSize);
+    PageInfo<User> findWithPageAndNo(Integer pageNum,Integer pageSize);
 }
