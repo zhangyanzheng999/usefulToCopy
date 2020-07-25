@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boss.bes.system.manage.mapper.UserRoleMapper">
+    <resultMap id="BaseResultMap" type="com.boss.bes.system.manage.pojo.entity.UserRole">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <id column="role_id" jdbcType="BIGINT" property="roleId"/>
+    </resultMap>
+
+    <resultMap id="ResultMapWithUsers" type="com.boss.bes.system.manage.pojo.vo.UserRoleVO">
+
+        <id column="role_id" jdbcType="BIGINT" property="roleId"/>
+        <collection property="users" ofType="com.boss.bes.system.manage.pojo.entity.User">
+
+            <id column="id" jdbcType="BIGINT" property="id"/>
+            <result column="code" jdbcType="VARCHAR" property="code"/>
+            <result column="password" jdbcType="VARCHAR" property="password"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+            <result column="profile_picture" jdbcType="VARCHAR" property="profilePicture"/>
+            <result column="sex" jdbcType="VARCHAR" property="sex"/>
+            <result column="birthday" jdbcType="DATE" property="birthday"/>
+            <result column="tel" jdbcType="VARCHAR" property="tel"/>
+            <result column="email" jdbcType="VARCHAR" property="email"/>
+            <result column="other" jdbcType="VARCHAR" property="other"/>
+            <result column="remark" jdbcType="VARCHAR" property="remark"/>
+            <result column="status" jdbcType="BIT" property="status"/>
+            <result column="created_by" jdbcType="BIGINT" property="createdBy"/>
+            <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+            <result column="updated_by" jdbcType="BIGINT" property="updatedBy"/>
+            <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+            <result column="version" jdbcType="BIGINT" property="version"/>
+            <result column="department_id" jdbcType="BIGINT" property="departmentId"/>
+            <result column="position_id" jdbcType="BIGINT" property="positionId"/>
+        </collection>
+
+
+    </resultMap>
+
+    <select id="getUserForRoleByRoleId" resultMap="ResultMapWithUsers">
+        SELECT u.*, ur.role_id
+        FROM tb_user_role ur
+                 LEFT JOIN tb_user u
+                           ON ur.user_id = u.id
+                 LEFT JOIN tb_department d
+                           ON u.department_id = d.id
+        WHERE ur.role_id = #{roleId}
+          AND d.company_id = #{companyId}
+    </select>
+    <!--用来删除-->
+    <delete id="deleteUserRoleWithCompanyId">
+        DELETE
+        FROM tb_user_role
+        WHERE role_id = #{roleId}
+          AND user_id
+            IN
+              (SELECT temp.id
+               FROM (SELECT u.id
+                     FROM tb_user_role ur
+                              LEFT JOIN tb_user u
+                                        ON ur.user_id = u.id
+                              LEFT JOIN tb_department d
+                                        ON u.department_id = d.id
+                     WHERE ur.role_id = #{roleId}
+                       AND d.company_id = #{companyId}) temp);
+    </delete>
+</mapper>

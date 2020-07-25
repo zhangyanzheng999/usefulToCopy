@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boss.bes.system.manage.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.boss.bes.system.manage.pojo.entity.User">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="profile_picture" jdbcType="VARCHAR" property="profilePicture"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="birthday" jdbcType="DATE" property="birthday"/>
+        <result column="tel" jdbcType="VARCHAR" property="tel"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="other" jdbcType="VARCHAR" property="other"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created_by" jdbcType="BIGINT" property="createdBy"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_by" jdbcType="BIGINT" property="updatedBy"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="version" jdbcType="BIGINT" property="version"/>
+        <result column="department_id" jdbcType="BIGINT" property="departmentId"/>
+        <result column="position_id" jdbcType="BIGINT" property="positionId"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMapWithCompany" type="com.boss.bes.system.manage.pojo.entity.User">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="profile_picture" jdbcType="VARCHAR" property="profilePicture"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="birthday" jdbcType="DATE" property="birthday"/>
+        <result column="tel" jdbcType="VARCHAR" property="tel"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="other" jdbcType="VARCHAR" property="other"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created_by" jdbcType="BIGINT" property="createdBy"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_by" jdbcType="BIGINT" property="updatedBy"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="version" jdbcType="BIGINT" property="version"/>
+        <result column="department_id" jdbcType="BIGINT" property="departmentId"/>
+        <result column="position_id" jdbcType="BIGINT" property="positionId"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="department_name" jdbcType="VARCHAR" property="departmentName"/>
+        <association property="companyName" javaType="string"
+                     select="com.boss.bes.system.manage.mapper.CompanyMapper.getCompanyName" column="company_id"/>
+        <association property="positionName" javaType="string"
+                     select="com.boss.bes.system.manage.mapper.PositionMapper.getPositionNameById"
+                     column="position_id"/>
+        <collection property="roles" ofType="com.boss.bes.system.manage.pojo.entity.Role"
+                    select="com.boss.bes.system.manage.mapper.RoleMapper.getRoleWithUserId"
+                    column="{userId=id,companyId=company_id}"/>
+    </resultMap>
+
+
+    <select id="getUser" resultMap="BaseResultMapWithCompany">
+        <include refid="baseSql"></include>
+        WHERE u.id = #{id}
+        AND u.version = #{version}
+    </select>
+
+    <select id="getUsersWithCompanyName" resultMap="BaseResultMapWithCompany">
+        <include refid="baseSql"></include>
+        <where>
+            <if test="name != null">
+                u.name LIKE CONCAT(CONCAT('%', #{name}), '%')
+            </if>
+            <if test="code != null">
+                AND u.code LIKE CONCAT(CONCAT('%', #{code}), '%')
+            </if>
+            <if test="tel != null">
+                AND u.tel LIKE CONCAT(CONCAT('%', #{tel}), '%')
+            </if>
+            <choose>
+                <when test="organizationId == null"/>
+                <otherwise>
+                    AND company_id IN (SELECT c.id FROM tb_company c WHERE c.organization_id=#{organizationId})
+                </otherwise>
+            </choose>
+            <if test="companyId != null">
+                AND company_id=#{companyId}
+            </if>
+            <if test="departmentId != null">
+                AND u.department_id=#{departmentId}
+            </if>
+        </where>
+        ORDER BY u.updated_time DESC
+    </select>
+    <sql id="baseSql">
+        SELECT u.*, d.company_id company_id, d.name department_name
+        FROM tb_user u
+                 LEFT JOIN tb_department d
+                           on u.department_id = d.id
+    </sql>
+    <select id="getUserIdWithCode" resultType="java.lang.Long">
+        SELECT id
+        FROM tb_user
+        WHERE code = #{code}
+    </select>
+
+
+    <resultMap id="UserWithOrgIdAndCompanyIdAndName" type="com.boss.bes.system.manage.pojo.dto.UserForExamDTO">
+        <result property="companyId" column="company_id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <association property="organizationId" javaType="java.lang.Long"
+                     select="com.boss.bes.system.manage.mapper.CompanyMapper.getOrgIdByCompanyId" column="company_id"/>
+
+    </resultMap>
+
+    <select id="getUserWithOrgIdAndCompanyIdAndName" resultMap="UserWithOrgIdAndCompanyIdAndName">
+        SELECT u.*, p.company_id company_id
+        FROM tb_user u
+                 LEFT JOIN tb_position p
+                           on u.position_id = p.id
+        WHERE u.id = #{id}
+    </select>
+    <select id="generatorCode" resultType="long">
+        SELECT MAX(code) + 1 code
+        FROM tb_user
+    </select>
+    <select id="getUserById" resultMap="BaseResultMap">
+        SELECT *
+        FROM tb_user
+        WHERE id = #{id}
+    </select>
+    <select id="getOrgByUserIdWithOutCompanyId" resultType="java.lang.Long">
+        SELECT DISTINCT o.id
+        FROM tb_user u
+                 LEFT JOIN tb_user_role ur ON u.id = ur.user_id
+                 LEFT JOIN tb_role r ON ur.role_id = r.id
+                 LEFT JOIN tb_organization o on r.organization_id = o.id
+                 LEFT JOIN tb_company_role cr on r.id = cr.role_id
+        WHERE u.id = #{id}
+          AND cr.company_id IS NULL
+    </select>
+    <select id="queryUserByRole" resultType="com.boss.bes.system.manage.pojo.dto.UserInfoDTO">
+        SELECT u.id id, u.name name
+        FROM tb_user u
+                 LEFT JOIN tb_user_role ur ON u.id = ur.user_id
+                 LEFT JOIN tb_role r ON r.id = ur.role_id
+        WHERE r.name = #{roleName}
+    </select>
+</mapper>

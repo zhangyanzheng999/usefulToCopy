@@ -1,0 +1,52 @@
+#防止出现意外备份一下配置文件
+server:
+  port: 9003
+spring:
+  application:
+    name: boss-system-manaer-center
+  jpa:
+      open-in-view: false
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 112.124.21.230:80
+  datasource:
+    url: jdbc:mysql://112.124.21.230:3366/db_system_manage?useSSL=false&characterEncoding=utf8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 3
+      max-lifetime: 300000
+      connection-test-query: SELECT 1
+  redis:
+    port: 23456
+    password: boss123
+    database: 0
+    host: 112.124.21.230
+    lettuce:
+      pool:
+        max-idle: 30
+        min-idle: 10
+        max-active: 30
+        max-wait: 10000
+    timeout: 300
+  profiles:
+    active: dev
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mybatis/*.xml
+pagehelper:
+  reasonable: true
+
+
+  # 如果选择固定Ip注册可以配置
+  spring.cloud.nacos.discovery.ip = 10.2.11.11
+  spring.cloud.nacos.discovery.port = 9090

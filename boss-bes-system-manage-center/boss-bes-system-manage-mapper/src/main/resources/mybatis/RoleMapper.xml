@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boss.bes.system.manage.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.boss.bes.system.manage.pojo.entity.Role">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created_by" jdbcType="BIGINT" property="createdBy"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_by" jdbcType="BIGINT" property="updatedBy"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="version" jdbcType="BIGINT" property="version"/>
+        <result column="organization_id" jdbcType="BIGINT" property="organizationId"/>
+    </resultMap>
+    <resultMap id="BaseResultMapWithCompanyAndOrg" type="com.boss.bes.system.manage.pojo.entity.Role">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created_by" jdbcType="BIGINT" property="createdBy"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_by" jdbcType="BIGINT" property="updatedBy"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="version" jdbcType="BIGINT" property="version"/>
+        <result column="organization_id" jdbcType="BIGINT" property="organizationId"/>
+        <association property="organizationName" javaType="string"
+                     select="com.boss.bes.system.manage.mapper.OrganizationMapper.getOrgName" column="organization_id"/>
+
+        <collection property="companyList" ofType="com.boss.bes.system.manage.pojo.entity.Company"
+                    select="com.boss.bes.system.manage.mapper.CompanyMapper.getCompanyListByRole" column="id"/>
+
+    </resultMap>
+
+
+    <select id="getRoleWithCompanyAndOrg" resultMap="BaseResultMapWithCompanyAndOrg">
+        <include refid="baseSql"></include>
+        WHERE id=#{id} AND version=#{version}
+    </select>
+    <!--没有公司Id-->
+    <select id="getRoleWithPage" resultMap="BaseResultMapWithCompanyAndOrg">
+        <include refid="baseSql"></include>
+        <where>
+            <if test="orgId != null">
+                r.organization_id =#{orgId}
+            </if>
+            <if test="name != null">
+                AND r.name LIKE #{name}
+            </if>
+        </where>
+        ORDER BY updated_time DESC
+    </select>
+
+    <resultMap id="ResultMapByCompanyId" type="com.boss.bes.system.manage.pojo.entity.Role">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created_by" jdbcType="BIGINT" property="createdBy"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_by" jdbcType="BIGINT" property="updatedBy"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="version" jdbcType="BIGINT" property="version"/>
+        <result column="organization_id" jdbcType="BIGINT" property="organizationId"/>
+        <association property="organizationName" javaType="string"
+                     select="com.boss.bes.system.manage.mapper.OrganizationMapper.getOrgName" column="organization_id"/>
+        <collection property="companyList" ofType="com.boss.bes.system.manage.pojo.entity.Company"
+                    select="com.boss.bes.system.manage.mapper.CompanyMapper.getCompanyById" column="company_id"/>
+
+    </resultMap>
+    <!--用公司Id-->
+    <select id="getRoleWithPageByCompanyId" resultMap="ResultMapByCompanyId">
+        SELECT c.id company_id, r.*
+        FROM tb_role r
+                 LEFT JOIN tb_company_role cr on r.id = cr.role_id
+                 LEFT JOIN tb_company c on cr.company_id = c.id
+        WHERE r.name LIKE #{name}
+          AND c.id = #{companyId}
+        ORDER BY updated_time DESC
+    </select>
+    <!--抽取公用代码段-->
+    <sql id="baseSql">
+        SELECT *
+        FROM tb_role r
+    </sql>
+    <select id="getRoleWithId" resultMap="BaseResultMap">
+
+        <include refid="baseSql"></include>
+        WHERE id=#{id}
+    </select>
+    <select id="getRoleWithUserId" resultMap="BaseResultMap">
+        SELECT DISTINCT r.*
+        FROM tb_role r
+        LEFT JOIN tb_user_role ur on r.id = ur.role_id
+        LEFT JOIN tb_company_role cr on r.id = cr.role_id
+        WHERE ur.user_id = #{userId}
+        <!--<if test="companyId != null">
+            AND cr.company_id=#{companyId}
+        </if>-->
+    </select>
+    <select id="getRoleWithCompanyId" resultMap="BaseResultMap">
+        SELECT r.*
+        FROM tb_role r
+                 LEFT JOIN tb_company_role tcr on r.id = tcr.role_id
+        WHERE tcr.company_id = #{companyId}
+    </select>
+    <select id="queryWithCompanyId" resultMap="ResultMapByCompanyId">
+        SELECT c.id company_id, r.*
+        FROM tb_role r
+                 LEFT JOIN tb_company_role cr on r.id = cr.role_id
+                 LEFT JOIN tb_company c on cr.company_id = c.id
+        WHERE r.id = #{id}
+          AND r.version = #{version}
+          AND c.id = #{companyId}
+
+    </select>
+    <select id="generatorCode" resultType="long">
+        SELECT MAX(code) + 1 code
+        FROM tb_role
+    </select>
+</mapper>

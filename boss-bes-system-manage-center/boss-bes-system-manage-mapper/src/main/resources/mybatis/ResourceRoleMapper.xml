@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boss.bes.system.manage.mapper.ResourceRoleMapper">
+    <resultMap id="BaseResultMap" type="com.boss.bes.system.manage.pojo.entity.ResourceRole">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="role_id" jdbcType="BIGINT" property="roleId"/>
+        <id column="resource_id" jdbcType="BIGINT" property="resourceId"/>
+    </resultMap>
+    <resultMap id="ResultWithResources" type="com.boss.bes.system.manage.pojo.vo.ResourceRoleVO">
+        <id column="role_id" jdbcType="BIGINT" property="roleId"/>
+        <collection property="resources" ofType="com.boss.bes.system.manage.pojo.entity.Resource"
+                    resultMap="com.boss.bes.system.manage.mapper.ResourceMapper.BaseResultMap"/>
+    </resultMap>
+    <select id="queryResourceForRole" resultMap="ResultWithResources">
+        SELECT rr.role_id role_id, r.*
+        FROM tb_resource r
+                 LEFT JOIN tb_resource_role rr
+                           ON r.id = rr.resource_id
+        WHERE rr.role_id = #{roleId}
+    </select>
+</mapper>

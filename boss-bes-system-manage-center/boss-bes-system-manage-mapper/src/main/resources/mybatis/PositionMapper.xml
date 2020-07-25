@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boss.bes.system.manage.mapper.PositionMapper">
+    <resultMap id="BaseResultMap" type="com.boss.bes.system.manage.pojo.entity.Position">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created_by" jdbcType="BIGINT" property="createdBy"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_by" jdbcType="BIGINT" property="updatedBy"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="version" jdbcType="BIGINT" property="version"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+    </resultMap>
+    <resultMap id="BaseResultMapWithCompany" type="com.boss.bes.system.manage.pojo.entity.Position">
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <association property="companyName" javaType="string"
+                     select="com.boss.bes.system.manage.mapper.CompanyMapper.getCompanyName" column="company_id"/>
+    </resultMap>
+
+
+    <select id="getPosition" resultMap="BaseResultMapWithCompany">
+        SELECT *
+        FROM tb_position
+        WHERE id = #{id}
+          AND version = #{version}
+    </select>
+
+    <select id="getPositionWithPage" resultMap="BaseResultMapWithCompany">
+        SELECT *
+        FROM tb_position
+        <where>
+            <choose>
+                <when test="organizationId == null">
+                    <if test="companyId != null">
+                        company_id=#{companyId}
+                    </if>
+                </when>
+                <otherwise>
+                    company_id IN
+                    (SELECT c.id FROM tb_company c WHERE c.organization_id =#{organizationId})
+                    <if test="companyId != null">
+                        AND company_id=#{companyId}
+                    </if>
+                </otherwise>
+            </choose>
+            AND name LIKE #{name}
+            <if test="status != null">
+                and status=#{status}
+            </if>
+        </where>
+        ORDER BY updated_time DESC
+    </select>
+    <select id="getPositionNameById" resultType="java.lang.String">
+        SELECT name
+        FROM tb_position
+        WHERE id = #{id}
+    </select>
+</mapper>

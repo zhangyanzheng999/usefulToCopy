@@ -1,0 +1,7 @@
+swagger:
+  title: API文档
+  description: 描述
+  version: 1.0
+  name: test
+  url: test
+  email: email

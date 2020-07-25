@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="DB2Tables" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <!--如果是tk.mybatis那么打开注释-->
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+            <property name="caseSensitive" value="true"/>
+            <property name="forceAnnotation" value="true"/>
+            <property name="beginningDelimiter" value="`"/>
+            <property name="endingDelimiter" value="`"/>
+        </plugin>
+        <plugin type="org.mybatis.generator.plugins.LombokPlugin">
+            <property name="hasLombok" value="true"/>
+        </plugin>
+        <!--jdbcConnection:指定如何连接到目标数据库-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://112.124.21.230:3366/db_system_manage?useSSL=false&amp;allowMultiQueries=true"
+                        userId="root"
+                        password="123456">
+        </jdbcConnection>
+        <!--javaTypeResolver java类型解析器:-->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.boss.bes.system.manage.pojo.entity" targetProject="boss-bes-system-manage-pojo\src\main\java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+
+        <sqlMapGenerator targetPackage="mybatis/" targetProject="boss-bes-system-manage-mapper\src\main\resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.boss.bes.system.manage.mapper"
+                             targetProject="boss-bes-system-manage-mapper\src\main\java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+        <!--table指向要逆向生成哪些表:根据这些表要创建javaBean-->
+        <table tableName="tb_dictionary" domainObjectName="Dictionary">
+            <property name="rootClass" value="com.boss.bes.system.manage.pojo.entity.common.BaseEntity"/>
+        </table>
+<!--        <table tableName="tb_company" domainObjectName="Company">
+            <property name="rootClass" value="com.boss.bes.system.manage.pojo.entity.common.BaseEntity"/>
+        </table>
+        <table tableName="tb_department" domainObjectName="Department">
+            <property name="rootClass" value="com.boss.bes.system.manage.pojo.entity.common.BaseEntity"/>
+        </table>
+        <table tableName="tb_company_role" domainObjectName="CompanyRole"/>
+        <table tableName="tb_position" domainObjectName="Position">
+            <property name="rootClass" value="com.boss.bes.system.manage.pojo.entity.common.BaseEntity"/>
+        </table>
+        <table tableName="tb_resource" domainObjectName="Resource">
+            <property name="rootClass" value="com.boss.bes.system.manage.pojo.entity.common.BaseEntity"/>
+        </table>
+        <table tableName="tb_resource_role" domainObjectName="ResourceRole"/>
+        <table tableName="tb_role" domainObjectName="Role">
+            <property name="rootClass" value="com.boss.bes.system.manage.pojo.entity.common.BaseEntity"/>
+        </table>
+        <table tableName="tb_system_param" domainObjectName="SystemParam">
+            <property name="rootClass" value="com.boss.bes.system.manage.pojo.entity.common.BaseEntity"/>
+        </table>
+        <table tableName="tb_user" domainObjectName="User">
+            <property name="rootClass" value="com.boss.bes.system.manage.pojo.entity.common.BaseEntity"/>
+        </table>
+        <table tableName="tb_user_online_info" domainObjectName="UserOnlineInfo"/>
+        <table tableName="tb_user_role" domainObjectName="UserRole"/>
+        <table tableName="tb_organization" domainObjectName="Organization">
+            <property name="rootClass" value="com.boss.bes.system.manage.pojo.entity.common.BaseEntity"/>
+        </table>-->
+    </context>
+</generatorConfiguration>

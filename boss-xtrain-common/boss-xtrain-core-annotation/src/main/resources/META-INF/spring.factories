@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+boss.xtrain.core.annotation.config.AnnotationConfig
