@@ -15,29 +15,41 @@ class Springboot01CacheApplicationTests {
     EmployeeMapper employeeMapper;
 
     @Autowired
-    StringRedisTemplate stringRedisTemplate; //操作字符串的
+    StringRedisTemplate stringRedisTemplate; //操作字符串
 
     @Autowired
-    RedisTemplate<Object,Object> redisTemplate; // kv都是Object
+    RedisTemplate redisTemplate; //k-v都是对象的
 
-    /**
-     * 基本操作
-     */
     @Test
-    public void test01(){
-        System.out.println(stringRedisTemplate.opsForValue().get("msg"));
+    /**
+     * Redis常见的五大数据类型
+     * String(字符串)、List(列表)、Set(集合)、ZSet(有序集合)、Hash(散列)
+     *  stringRedisTemplate.opsForValue()
+     *  stringRedisTemplate.opsForList()
+     *  stringRedisTemplate.opsForSet()
+     *  stringRedisTemplate.opsForZSet()
+     *  stringRedisTemplate.opsForHash()
+     */
+    public void test01() {
+        //stringRedisTemplate.opsForValue().append("msg","hello");
+       /* String msg = stringRedisTemplate.opsForValue().get("msg");
+        System.out.println(msg);*/
+        stringRedisTemplate.opsForList().leftPush("mylist", "1");
+        stringRedisTemplate.opsForList().leftPush("mylist", "2");
     }
 
-    /**
-     * 保存对象
-     */
     @Test
-    public void test02(){
+    /**
+     * 测试保存对象
+     */
+    public void test02() {
         Employee emp = employeeMapper.getEmpById(1);
-        //默认如果保存对象，使用jdk序列化机制，序列化后的数据保存到redis中
-        redisTemplate.opsForValue().set("emp-01",emp);
-        //1、将数据以json方式保存
-
+        // 如果保存对象，使用JDK序列化机制，序列化后的数据保存到redis中
+        //redisTemplate.opsForValue().set("emp-01", emp);
+        // 1.将数据以json的方式保存
+         //(1)自己将对象转为json
+        //(2)redisTemplate有默认的序列化规则
+        redisTemplate.opsForValue().set("emp-02", emp);
     }
 
     @Test
